@@ -27,39 +27,21 @@ public class WSTT {
 	}
 	
 	private float calculaPreco(final Date dataInicial, final Date dataFinal) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar inicio = Calendar.getInstance();
+        inicio.setTime(dataInicial);
+		Calendar fim = Calendar.getInstance();
+		fim.setTime(dataFinal);
+
+		Date inicioPeriodoComDesconto = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 18, 0, 0);
+		Date inicioPeriodoMeiaNoite = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 23, 59, 59);;
+		Date fimPeriodoComDesconto = converterParaData(fim.get(Calendar.DAY_OF_MONTH), fim.get(Calendar.MONTH)+1, fim.get(Calendar.YEAR), 7, 59, 59);;
+
+		
 		// TODO
 		// (float) (duracaoLigacao * 0.4)
 		
-		/*SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		Calendar inicio = Calendar.getInstance();
-        inicio.setTime(dataInicial);
-		String inicioPeriodoComDescontoString = inicio.get(Calendar.DAY_OF_MONTH) + "-" + inicio.get(Calendar.MONTH) + "-" + inicio.get(Calendar.YEAR) + " " + "18:00:00";
-		String inicioPeriodoMeiaNoiteString = inicio.get(Calendar.DAY_OF_MONTH) + "-" + inicio.get(Calendar.MONTH) + "-" + inicio.get(Calendar.YEAR) + " " + "23:59:59";
-		Calendar fim = Calendar.getInstance();
-		fim.setTime(dataFinal);
-		String fimPeriodoComDescontoString = fim.get(Calendar.DAY_OF_MONTH) + "-" + fim.get(Calendar.MONTH) + "-" + fim.get(Calendar.YEAR) + " " + "7:59:59";
-
-		Date inicioPeriodoComDesconto = null;
-		Date inicioPeriodoMeiaNoite = null;
-		Date fimPeriodoComDesconto = null;
-		
-		try {
-
-			inicioPeriodoComDesconto = formatter.parse(inicioPeriodoComDescontoString);
-			inicioPeriodoMeiaNoite = formatter.parse(inicioPeriodoMeiaNoiteString);
-			fimPeriodoComDesconto = formatter.parse(fimPeriodoComDescontoString);
-			System.out.println(inicioPeriodoComDesconto);
-			System.out.println(formatter.format(inicioPeriodoComDesconto));
-			
-			System.out.println(inicioPeriodoMeiaNoite);
-			System.out.println(formatter.format(inicioPeriodoMeiaNoite));
-			
-			System.out.println(fimPeriodoComDesconto);
-			System.out.println(formatter.format(fimPeriodoComDesconto));
-			
-		} catch (ParseException e) {
-			System.out.println("Período(s) Inválido(s)");
-		}
+		/*
 		
 		Calendar aux = inicio;
 		
@@ -81,11 +63,6 @@ public class WSTT {
 		}
 		
 		
-		//duracaoChamadaNoPeriodoComDesconto = dataInicial.getTime() - inicioPeriodoComDesconto.getTime();
-		System.out.println(fimPeriodoComDesconto);
-		System.out.println(formatter.format(fimPeriodoComDesconto));
-		
-		//duracaoChamadaNoPeriodoSemDesconto = dataFinal.getTime() - fimPeriodoComDesconto.getTime();
 		*/
 		
 		return -1;
