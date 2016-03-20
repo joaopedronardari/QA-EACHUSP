@@ -1,8 +1,7 @@
-package x;
+package application;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +26,6 @@ public class WSTT {
 	}
 	
 	private float calculaPreco(final Date dataInicial, final Date dataFinal) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		Calendar inicio = Calendar.getInstance();
         inicio.setTime(dataInicial);
 		Calendar fim = Calendar.getInstance();
@@ -35,37 +33,31 @@ public class WSTT {
 
 		Date inicioPeriodoComDesconto = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 18, 0, 0);
 		Date inicioPeriodoMeiaNoite = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 23, 59, 59);;
-		Date fimPeriodoComDesconto = converterParaData(fim.get(Calendar.DAY_OF_MONTH), fim.get(Calendar.MONTH)+1, fim.get(Calendar.YEAR), 7, 59, 59);;
+		Date fimPeriodoComDesconto = converterParaData(fim.get(Calendar.DAY_OF_MONTH)+1, fim.get(Calendar.MONTH)+1, fim.get(Calendar.YEAR), 7, 59, 59);;
 
-		
-		// TODO
-		// (float) (duracaoLigacao * 0.4)
-		
-		/*
-		
 		Calendar aux = inicio;
-		
-		while(aux.before(fim)){
-			
+		float valor = 0F;
+		while(aux.before(fim)) {
 			if(aux.get(Calendar.HOUR_OF_DAY) >= 8 && aux.get(Calendar.HOUR_OF_DAY) < 18) {
-				this.duracaoChamadaNoPeriodoSemDesconto += minutesBetween(aux.getTime(), inicioPeriodoComDesconto);
+				long minutos = calculaDuracaoLigacao(aux.getTime(), inicioPeriodoComDesconto);
+				valor += calculoValorBruto(minutos);
 				aux.setTime(inicioPeriodoComDesconto);		
 			} else if(aux.get(Calendar.HOUR_OF_DAY) >= 0 && aux.get(Calendar.HOUR_OF_DAY) < 8) {
-				this.duracaoChamadaNoPeriodoComDesconto += minutesBetween(aux.getTime(), fimPeriodoComDesconto);
+				long minutos = calculaDuracaoLigacao(aux.getTime(), fimPeriodoComDesconto);
+				valor += (calculoValorBruto(minutos)*0.5);
 				aux.setTime(fimPeriodoComDesconto);	
 			} else if(aux.get(Calendar.HOUR_OF_DAY) >= 18 && aux.get(Calendar.HOUR_OF_DAY) < 24) {
-				this.duracaoChamadaNoPeriodoComDesconto += minutesBetween(aux.getTime(), inicioPeriodoMeiaNoite);
+				long minutos = calculaDuracaoLigacao(aux.getTime(), inicioPeriodoMeiaNoite);
+				valor += (calculoValorBruto(minutos)*0.5);
 				aux.setTime(inicioPeriodoMeiaNoite);
-			} 
-
-			
-			System.out.println("loop");
+			}
 		}
 		
-		
-		*/
-		
-		return -1;
+		return valor;
+	}
+	
+	private float calculoValorBruto(long minutos) {
+		return (float) (minutos * 0.4);
 	}
 	
 	public Date converterParaData(int dia,int mes, int ano, int hora, int minuto, int segundo) {
