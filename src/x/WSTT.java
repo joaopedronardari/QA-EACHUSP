@@ -102,15 +102,15 @@ public class WSTT {
 		
 		while(inicio.before(fim)){
 			
-			if(inicio.get(Calendar.HOUR) >= 8 && inicio.get(Calendar.HOUR) < 18) {
+			if(inicio.get(Calendar.HOUR_OF_DAY) >= 8 && inicio.get(Calendar.HOUR_OF_DAY) < 18) {
 //				aux = atualizaCalendar(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH), 
 //						inicio.get(Calendar.YEAR), hora, min, seg);
 				duracaoChamadaNoPeriodoSemDesconto += dataFinal.getTime() - dataInicial.getTime();
-			} else if(inicio.get(Calendar.HOUR) >= 0 && inicio.get(Calendar.HOUR) < 8) {
+			} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 0 && inicio.get(Calendar.HOUR_OF_DAY) < 8) {
 				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
-			} else if(inicio.get(Calendar.HOUR) >= 18 && inicio.get(Calendar.HOUR) < 24) {
+			} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 18 && inicio.get(Calendar.HOUR_OF_DAY) < 24) {
 				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
-			} else if(inicio.get(Calendar.HOUR) >= 18 && inicio.get(Calendar.HOUR) < 8) {
+			} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 18 && inicio.get(Calendar.HOUR_OF_DAY) < 8) {
 				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
 			} 
 		}
