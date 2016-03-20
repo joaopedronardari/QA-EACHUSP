@@ -23,6 +23,7 @@ public class WSTT {
 	public float calculaTarifa(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof) {
 		
 		float duracaoLigacao = calculaDuracaoLigacao(diai, mesi, anoi, horai, minutoi, segundoi, diaf, mesf, anof, horaf, minutof, segundof);
+		if (duracaoLigacao == -1F) { return -1; }
 		float precoBruto = calculaPrecoBruto(duracaoLigacao);
 		float porcentagemDesconto = calculaDescontos();
 		float tarifaFinal = aplicaDescontoNoPrecoBruto(precoBruto, porcentagemDesconto);
@@ -36,7 +37,7 @@ public class WSTT {
 	public float calculaDuracaoLigacao(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof) {
 		
 		Float verifica = verify(diai, mesi, anoi, horai, minutoi, segundoi, diaf, mesf, anof, horaf, minutof, segundof);
-		if(verifica.floatValue() == -1F){
+		if(verifica == -1F){
 			return verifica;
 		}
 		
@@ -188,7 +189,33 @@ public class WSTT {
     		return -1F;
     	}
     	
+    	boolean inicialBissexto = bissexto(anoi);
+    	boolean finalBissexto = bissexto(anof);
+    	
+    	if (!inicialBissexto) {
+    		if (mesi==2 && diai>28) {
+    			return -1F;
+    		}
+    	}
+    	
+    	if (!finalBissexto) {
+    		if (mesf==2 && diaf>28) {
+    			return -1F;
+    		}
+    	}
+    	
     	return 0F;
+    }
+    
+    public boolean bissexto(int ano) {
+    	String yearString = String.valueOf(ano);
+    	if(ano%4==0) {
+    		if (!yearString.substring(yearString.length()-2).equals("00") || ano%400==0) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
 	
 }

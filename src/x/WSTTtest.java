@@ -15,47 +15,79 @@ public class WSTTtest extends TestCase {
 	}
 
 	@Test
-	public void testCalculaTarifaEmPeriodoBruto(){ //x
+	public void testCalculaTarifaEmPeriodoBruto(){ // Caso 1
 		Float tarifa = wstt.calculaTarifa(4,11,2015,15,0,0,4,11,2015,15,20,0);
 		assertEquals(8F, tarifa);
 	}
 	
 	@Test
-	public void testCalculaTarifaEmPeriodoBrutoAcima60Minutos(){ //x
-		Float tarifa = wstt.calculaTarifa(4,11,2015,15,0,0,4,11,2015,16,0,1);
-		assertEquals(20.74F, tarifa);
-	}
-	
-	@Test
-	public void testCalculaTarifaEmPeriodoDesconto(){ //x
+	public void testCalculaTarifaEmPeriodoDesconto(){ // Caso 2
 		Float tarifa = wstt.calculaTarifa(4,11,2015,18,0,0,4,11,2015,18,20,0);
 		assertEquals(8F, tarifa);
 	}
 	
 	@Test
-	public void testCalculaTarifaEmPeriodoDescontoAcima60Minutos(){ //x
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 18, 0, 0,10, 1, 2016, 20, 30, 0);
-		assertEquals(25.5F, tarifa);
+	public void testCalculaTarifaEmPeriodoBrutoAcima60Minutos(){ // Caso 3
+		Float tarifa = wstt.calculaTarifa(4,11,2015,15,0,0,4,11,2015,16,0,1);
+		assertEquals(20.74F, tarifa);
 	}
 	
 	@Test
-	public void testCalculaTarifaComecaComDescontoTerminaSemDesconto(){ //x
+	public void testCalculaTarifaComecaComDescontoTerminaSemDesconto(){ // Caso 4
 		Float tarifa = wstt.calculaTarifa(4,11,2015,7,40,0,4,11,2015,8,10,0);
 		assertEquals(8F, tarifa);
 	}
 	
 	@Test
-	public void testCalculaTarifaComecaSemDescontoTerminaComDesconto(){ //x
+	public void testCalculaTarifaComecaSemDescontoTerminaComDesconto(){ // Caso 5
 		Float tarifa = wstt.calculaTarifa(4,11,2015,17,40,0,4,11,2015,18,10,0);
 		assertEquals(10F, tarifa);
 	}
 	
 	@Test
-	public void testCalculaTarifaEmComESemDescontoAcima60Minutos(){ //x
+	public void testCalculaTarifaEmPeriodoDescontoAcima60Minutos(){ // Caso 6
+		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 18, 0, 0,10, 1, 2016, 20, 30, 0);
+		assertEquals(25.5F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaTarifaEmComESemDescontoAcima60Minutos(){ // Caso 7
 		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 17, 30, 0, 10, 1, 2016, 19, 30, 0);
 		assertEquals(25.5F, tarifa);
 	}
 	
+	@Test
+	public void testCalculaComAnoInicialBissexto(){ // Caso 8
+		Float tarifa = wstt.calculaTarifa(29,02,2016,15,0,0,29,02,2016,15,20,0);
+		assertEquals(8F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaComAnoFinalBissexto(){ // Caso 9
+		Float tarifa = wstt.calculaTarifa(28,02,2016,23,50,0,29,02,2016,0,10,0);
+		assertEquals(4F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaComAnoInicialBissextoInvalido(){ // Caso 10
+		Float tarifa = wstt.calculaTarifa(29,02,2015,15,0,0,29,02,2015,15,20,0);
+		assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaComAnoFinalBissextoInvalido(){ // Caso 11
+		Float tarifa = wstt.calculaTarifa(28,02,2015,23,50,0,29,02,2015,0,10,0);
+		assertEquals(-1F, tarifa);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	// VITOR TESTES
 	@Test
 	public void testCalculaDuracaoLigacao(){
 		Float duracaoLigacao = wstt.calculaDuracaoLigacao(10, 1, 2016, 10, 0, 0, 
