@@ -80,8 +80,77 @@ public class WSTTtest extends TestCase {
 		assertEquals(-1F, tarifa);
 	}
 	
+	@Test
+	public void testCalculaDiaInicialZero(){ // Caso 12
+		  Float tarifa = wstt.calculaTarifa(0,2,2015,0,0,0,1,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
 	
+	@Test
+	public void testCalculaMesInicialZero(){ // Caso 13
+		  Float tarifa = wstt.calculaTarifa(1,0,2015,0,0,0,1,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
 	
+	@Test
+	public void testCalculaAnoInicialZero(){ // Caso 14
+		  Float tarifa = wstt.calculaTarifa(1,2,0,0,0,0,1,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaHoraInicialNegativa(){ // Caso 15
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,-1,0,0,1,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaMinutoInicialNegativa(){ // Caso 16
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,-1,0,1,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaSegundoInicialNegativa(){ // Caso 17
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,-1,1,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaDiaFinalZero(){ // Caso 18
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,0,2,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaMesFinalZero(){ // Caso 19
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,1,0,2015,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaAnoFinalZero(){ // Caso 20
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,1,2,0,0,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaHoraFinalNegativa(){ // Caso 21
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,1,2,2015,-1,0,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaMinutoFinalNegativa(){ // Caso 22
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,1,2,2015,0,-1,0);
+		  assertEquals(-1F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaSegundoFinalNegativa(){ // Caso 23
+		  Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,1,2,2015,0,0,-1);
+		  assertEquals(-1F, tarifa);
+	}
 	
 	
 	
@@ -95,13 +164,7 @@ public class WSTTtest extends TestCase {
 		assertEquals(150F, duracaoLigacao);
 	}
 	
-	@Test
-	public void testCalculaDataZero(){
-		  Float duracaoLigacao = wstt.calculaDuracaoLigacao(0, 1, 2016, 10, 0, 0, 
-						0, 1, 2016, 12, 30, 0);
-
-		  assertEquals(-1F, duracaoLigacao);
-	}
+	
 	
 	@Test
 	public void testCalculaDataMaiorQue31(){
