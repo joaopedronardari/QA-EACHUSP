@@ -26,6 +26,7 @@ public class WSTT {
 	}
 	
 	private float calculaPreco(final Date dataInicial, final Date dataFinal) {
+		long duracao = calculaDuracaoLigacao(dataInicial, dataFinal);
 		Calendar inicio = Calendar.getInstance();
         inicio.setTime(dataInicial);
 		Calendar fim = Calendar.getInstance();
@@ -37,17 +38,20 @@ public class WSTT {
 
 		Calendar aux = inicio;
 		float valor = 0F;
-		while(aux.before(fim)) {
+		while(duracao>=0) {
 			if(aux.get(Calendar.HOUR_OF_DAY) >= 8 && aux.get(Calendar.HOUR_OF_DAY) < 18) {
 				long minutos = calculaDuracaoLigacao(aux.getTime(), inicioPeriodoComDesconto);
+				duracao-=minutos;
 				valor += calculoValorBruto(minutos);
 				aux.setTime(inicioPeriodoComDesconto);		
 			} else if(aux.get(Calendar.HOUR_OF_DAY) >= 0 && aux.get(Calendar.HOUR_OF_DAY) < 8) {
 				long minutos = calculaDuracaoLigacao(aux.getTime(), fimPeriodoComDesconto);
+				duracao-=minutos;
 				valor += (calculoValorBruto(minutos)*0.5);
 				aux.setTime(fimPeriodoComDesconto);	
 			} else if(aux.get(Calendar.HOUR_OF_DAY) >= 18 && aux.get(Calendar.HOUR_OF_DAY) < 24) {
 				long minutos = calculaDuracaoLigacao(aux.getTime(), inicioPeriodoMeiaNoite);
+				duracao-=minutos;
 				valor += (calculoValorBruto(minutos)*0.5);
 				aux.setTime(inicioPeriodoMeiaNoite);
 			}
