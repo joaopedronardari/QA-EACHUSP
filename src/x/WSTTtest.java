@@ -211,12 +211,5 @@ public class WSTTtest extends TestCase {
 		Float tarifa = wstt.calculaTarifa(1,2,2015,0,0,0,1,2,2015,0,0,60);
 		assertEquals(-1F, tarifa);
 	}
-	
-	@Test
-	public void testCalculaDuracaoLigacao(){
-		Float duracaoLigacao = wstt.calculaDuracaoLigacao(10, 1, 2016, 10, 0, 0, 
-				10, 1, 2016, 12, 30, 0);
-		assertEquals(150F, duracaoLigacao);
-	}
 
 }
