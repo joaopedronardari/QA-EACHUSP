@@ -23,7 +23,7 @@ public class WSTTtest extends TestCase {
 	@Test
 	public void testCalculaTarifaEmPeriodoDesconto(){ // Caso 2
 		Float tarifa = wstt.calculaTarifa(4,11,2015,18,0,0,4,11,2015,18,20,0);
-		assertEquals(8F, tarifa);
+		assertEquals(4F, tarifa);
 	}
 	
 	@Test

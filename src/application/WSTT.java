@@ -32,18 +32,19 @@ public class WSTT {
 		Calendar fim = Calendar.getInstance();
 		fim.setTime(dataFinal);
 
-		Date inicioPeriodoComDesconto = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 18, 0, 0);
+		System.out.println(duracao);
+		
+		/*Date inicioPeriodoComDesconto = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 18, 0, 0);
 		Date inicioPeriodoMeiaNoite = converterParaData(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH)+1, inicio.get(Calendar.YEAR), 23, 59, 59);;
 		Date fimPeriodoComDesconto = converterParaData(fim.get(Calendar.DAY_OF_MONTH)+1, fim.get(Calendar.MONTH)+1, fim.get(Calendar.YEAR), 7, 59, 59);;
-
+		 */
 		Calendar aux = inicio;
 		float valor = 0F;
 		
 		if (inicio.get(Calendar.HOUR_OF_DAY) >= 8 && inicio.get(Calendar.HOUR_OF_DAY) < 18 &&
 				fim.get(Calendar.HOUR_OF_DAY) >= 8 && fim.get(Calendar.HOUR_OF_DAY) < 18) {
 			return calculoValorBruto(duracao);
-		} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 18 && inicio.get(Calendar.HOUR_OF_DAY) < 8 &&
-				fim.get(Calendar.HOUR_OF_DAY) >= 18 && fim.get(Calendar.HOUR_OF_DAY) < 8) {
+		} else {
 			return calculoValorBruto(duracao)*0.5F;
 		}
 		
@@ -67,7 +68,7 @@ public class WSTT {
 			}
 		}*/
 		
-		return valor;
+		//return valor;
 	}
 	
 	private float calculoValorBruto(long minutos) {
@@ -80,11 +81,8 @@ public class WSTT {
 
 		try {
 			Date data = formatter.parse(dataString);
-			System.out.println(data);
-			System.out.println(formatter.format(data));
 			return data;
 		} catch (ParseException e) {
-			System.out.println("Data(s) Inválida(s)");
 			return null;
 		}
 	}
