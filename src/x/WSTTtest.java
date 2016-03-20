@@ -16,44 +16,44 @@ public class WSTTtest extends TestCase {
 	}
 
 	@Test
-	public void testCalculaTarifaEmPeriodoBruto(){
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 10, 0, 0, 
-				10, 1, 2016, 10, 30, 0);
-		Assert.assertEquals(12F, tarifa);
-	}
-	
-	@Test
-	public void testCalculaTarifaEmPeriodoBrutoAcima60Minutos(){
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 10, 0, 0, 
-				10, 1, 2016, 12, 30, 0);
-		Assert.assertEquals(51F, tarifa);
-	}
-	
-	@Test
-	public void testCalculaTarifaEmPeriodoDesconto(){
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 18, 0, 0, 
-				10, 1, 2016, 18, 30, 0);
-		Assert.assertEquals(6F, tarifa);
-	}
-	
-	@Test
-	public void testCalculaTarifaEmPeriodoDescontoAcima60Minutos(){
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 18, 0, 0, 
-				10, 1, 2016, 20, 30, 0);
-		Assert.assertEquals(25.5F, tarifa);
-	}
-	
-	@Test
-	public void testCalculaTarifaEmComESemDesconto(){
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 17, 50, 0, 
-				10, 1, 2016, 18, 20, 0);
+	public void testCalculaTarifaEmPeriodoBruto(){ //x
+		Float tarifa = wstt.calculaTarifa(4,11,2015,15,0,0,4,11,2015,15,20,0);
 		Assert.assertEquals(8F, tarifa);
 	}
 	
 	@Test
-	public void testCalculaTarifaEmComESemDescontoAcima60Minutos(){
-		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 17, 30, 0, 
-				10, 1, 2016, 19, 30, 0);
+	public void testCalculaTarifaEmPeriodoBrutoAcima60Minutos(){ //x
+		Float tarifa = wstt.calculaTarifa(4,11,2015,15,0,0,4,11,2015,16,0,1);
+		Assert.assertEquals(20.74F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaTarifaEmPeriodoDesconto(){ //x
+		Float tarifa = wstt.calculaTarifa(4,11,2015,18,0,0,4,11,2015,18,20,0);
+		Assert.assertEquals(8F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaTarifaEmPeriodoDescontoAcima60Minutos(){ //x
+		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 18, 0, 0,10, 1, 2016, 20, 30, 0);
+		Assert.assertEquals(25.5F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaTarifaComecaComDescontoTerminaSemDesconto(){ //x
+		Float tarifa = wstt.calculaTarifa(4,11,2015,7,40,0,4,11,2015,8,10,0);
+		Assert.assertEquals(8F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaTarifaComecaSemDescontoTerminaComDesconto(){ //x
+		Float tarifa = wstt.calculaTarifa(4,11,2015,17,40,0,4,11,2015,18,10,0);
+		Assert.assertEquals(10F, tarifa);
+	}
+	
+	@Test
+	public void testCalculaTarifaEmComESemDescontoAcima60Minutos(){ //x
+		Float tarifa = wstt.calculaTarifa(10, 1, 2016, 17, 30, 0, 10, 1, 2016, 19, 30, 0);
 		Assert.assertEquals(25.5F, tarifa);
 	}
 	
