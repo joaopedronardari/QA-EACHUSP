@@ -38,6 +38,16 @@ public class WSTT {
 
 		Calendar aux = inicio;
 		float valor = 0F;
+		
+		if (inicio.get(Calendar.HOUR_OF_DAY) >= 8 && inicio.get(Calendar.HOUR_OF_DAY) < 18 &&
+				fim.get(Calendar.HOUR_OF_DAY) >= 8 && fim.get(Calendar.HOUR_OF_DAY) < 18) {
+			return calculoValorBruto(duracao);
+		} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 18 && inicio.get(Calendar.HOUR_OF_DAY) < 8 &&
+				fim.get(Calendar.HOUR_OF_DAY) >= 18 && fim.get(Calendar.HOUR_OF_DAY) < 8) {
+			return calculoValorBruto(duracao)*0.5F;
+		}
+		
+		/*
 		while(duracao>=0) {
 			if(aux.get(Calendar.HOUR_OF_DAY) >= 8 && aux.get(Calendar.HOUR_OF_DAY) < 18) {
 				long minutos = calculaDuracaoLigacao(aux.getTime(), inicioPeriodoComDesconto);
@@ -55,7 +65,7 @@ public class WSTT {
 				valor += (calculoValorBruto(minutos)*0.5);
 				aux.setTime(inicioPeriodoMeiaNoite);
 			}
-		}
+		}*/
 		
 		return valor;
 	}
