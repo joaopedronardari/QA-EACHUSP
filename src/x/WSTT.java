@@ -1,3 +1,5 @@
+package x;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +35,11 @@ public class WSTT {
 	
 	public float calculaDuracaoLigacao(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof) {
 		
+		Float verifica = verify(diai, mesi, anoi, horai, minutoi, segundoi, diaf, mesf, anof, horaf, minutof, segundof);
+		if(verifica.floatValue() == -1F){
+			return verifica;
+		}
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
 		dataInicialString = diai + "-" + mesi + "-" + anoi + " " + horai + ":" + minutoi + ":" + segundoi;
 		dataFinalString = diaf + "-" + mesf + "-" + anof  + " " + horaf + ":" + minutof + ":" + segundof;
@@ -49,6 +56,7 @@ public class WSTT {
 			
 		} catch (ParseException e) {
 			System.out.println("Data(s) Inválida(s)");
+			return -1F;
 		}
 		
 		Long duracaoLigacao = minutesBetween(dataInicial,dataFinal); //retorna a diferença em minutos
@@ -64,14 +72,13 @@ public class WSTT {
 	
 	public void calculaDuracaoNosIntervalos() {
 		
-		ArrayList<Float> intervalos = new ArrayList<Float>();
-		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-        cal.setTime(dataInicial);
-		String inicioPeriodoComDescontoString = cal.get(Calendar.DAY_OF_MONTH) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.YEAR) + " " + "18:00:00";
-		cal.setTime(dataFinal);
-		String fimPeriodoComDescontoString = cal.get(Calendar.DAY_OF_MONTH) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.YEAR) + " " + "7:59:59";
+		Calendar inicio = Calendar.getInstance();
+        inicio.setTime(dataInicial);
+		String inicioPeriodoComDescontoString = inicio.get(Calendar.DAY_OF_MONTH) + "-" + inicio.get(Calendar.MONTH) + "-" + inicio.get(Calendar.YEAR) + " " + "18:00:00";
+		Calendar fim = Calendar.getInstance();
+		fim.setTime(dataFinal);
+		String fimPeriodoComDescontoString = fim.get(Calendar.DAY_OF_MONTH) + "-" + fim.get(Calendar.MONTH) + "-" + fim.get(Calendar.YEAR) + " " + "7:59:59";
 
 		Date inicioPeriodoComDesconto = null;
 		Date fimPeriodoComDesconto = null;
@@ -90,25 +97,42 @@ public class WSTT {
 			System.out.println("Período(s) Inválido(s)");
 		}
 		
+		Calendar aux = Calendar.getInstance();
 		
-		cal.setTime(dataInicial);
-		if(cal.get(Calendar.HOUR) >= 8 && cal.get(Calendar.HOUR) < 18) {
-			duracaoChamadaNoPeriodoSemDesconto = dataFinal.getTime() - dataInicial.getTime();
-		} else if(cal.get(Calendar.HOUR) >= 0 && cal.get(Calendar.HOUR) < 8) {
-			duracaoChamadaNoPeriodoComDesconto = dataFinal.getTime() - dataInicial.getTime();
-		} else if(cal.get(Calendar.HOUR) >= 18 && cal.get(Calendar.HOUR) < 24) {
-			duracaoChamadaNoPeriodoComDesconto = dataFinal.getTime() - dataInicial.getTime();
-		} else if(cal.get(Calendar.HOUR) >= 18 && cal.get(Calendar.HOUR) < 8) {
-			duracaoChamadaNoPeriodoComDesconto = dataFinal.getTime() - dataInicial.getTime();
-		} 
+		while(inicio.before(fim)){
+			
+			if(inicio.get(Calendar.HOUR) >= 8 && inicio.get(Calendar.HOUR) < 18) {
+//				aux = atualizaCalendar(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH), 
+//						inicio.get(Calendar.YEAR), hora, min, seg);
+				duracaoChamadaNoPeriodoSemDesconto += dataFinal.getTime() - dataInicial.getTime();
+			} else if(inicio.get(Calendar.HOUR) >= 0 && inicio.get(Calendar.HOUR) < 8) {
+				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
+			} else if(inicio.get(Calendar.HOUR) >= 18 && inicio.get(Calendar.HOUR) < 24) {
+				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
+			} else if(inicio.get(Calendar.HOUR) >= 18 && inicio.get(Calendar.HOUR) < 8) {
+				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
+			} 
+		}
 		
-		duracaoChamadaNoPeriodoComDesconto = dataInicial.getTime() - inicioPeriodoComDesconto.getTime();
+		
+		//duracaoChamadaNoPeriodoComDesconto = dataInicial.getTime() - inicioPeriodoComDesconto.getTime();
 		System.out.println(fimPeriodoComDesconto);
 		System.out.println(formatter.format(fimPeriodoComDesconto));
 		
-		duracaoChamadaNoPeriodoSemDesconto = dataFinal.getTime() - fimPeriodoComDesconto.getTime();
+		//duracaoChamadaNoPeriodoSemDesconto = dataFinal.getTime() - fimPeriodoComDesconto.getTime();
 		
-		//return intervalos;
+	}
+	
+	public Calendar atualizaCalendar(int dia, int mes, int ano, int hora, int min, int seg){
+		
+        final Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_MONTH, dia);
+        c.set(Calendar.MONTH, mes);
+        c.set(Calendar.YEAR, ano);
+        c.set(Calendar.HOUR_OF_DAY, hora);
+        c.set(Calendar.MINUTE, min);
+        c.set(Calendar.SECOND, seg);
+        return c;
 	}
 	
 	public float calculaDescontos() {
@@ -121,7 +145,7 @@ public class WSTT {
 		
 		Float precoBrutoAux = precoBruto * (1 - porcentagemDesconto);
 		if(maisQueUmaHora == true){
-			precoBrutoAux = precoBrutoAux * (1 - 0.85F);
+			precoBrutoAux = precoBrutoAux * (1 - 0.15F);
 		}
 		return precoBrutoAux;
 	}
@@ -136,6 +160,35 @@ public class WSTT {
     public static long minutesBetween(Date dateFrom, Date dateTo) {
         long milliseconds = Math.abs(dateTo.getTime() - dateFrom.getTime());
         return milliseconds / MINUTE_IN_MILLISECONDS;
+    }
+    
+    public Float verify(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof){
+    	  	
+    	if(diai >= 31 || diai <= 0 || diaf >=31 || diaf <=0){
+    		return -1F;
+    	}
+    	
+    	if(mesi >= 12 || mesi <= 0 || mesf >=12 || mesf <=0){
+    		return -1F;
+    	}
+    	
+    	if(anoi <= 0 || anof <= 0){
+    		return -1F;
+    	}
+    	
+    	if(horai >= 24 || horai < 0 || horaf >=24 || horaf <0){
+    		return -1F;
+    	}
+    	
+    	if(minutoi > 59 || minutoi < 0 || minutof >59 || minutof <0){
+    		return -1F;
+    	}
+    	
+    	if(segundoi > 59 || segundoi < 0 || segundof >59 || segundof <0){
+    		return -1F;
+    	}
+    	
+    	return 0F;
     }
 	
 }
