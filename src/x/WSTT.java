@@ -17,8 +17,8 @@ public class WSTT {
 	private Date dataInicial;
 	private Date dataFinal;
 	private boolean maisQueUmaHora;
-	private float duracaoChamadaNoPeriodoSemDesconto;
-	private float duracaoChamadaNoPeriodoComDesconto;
+	public float duracaoChamadaNoPeriodoSemDesconto;
+	public float duracaoChamadaNoPeriodoComDesconto;
 	
 	public float calculaTarifa(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof) {
 		
@@ -60,6 +60,8 @@ public class WSTT {
 			return -1F;
 		}
 		
+		calculaDuracaoNosIntervalos();
+		
 		Long duracaoLigacao = minutesBetween(dataInicial,dataFinal); //retorna a diferença em minutos
 		
 		if(duracaoLigacao >= 60){
@@ -77,19 +79,25 @@ public class WSTT {
 		Calendar inicio = Calendar.getInstance();
         inicio.setTime(dataInicial);
 		String inicioPeriodoComDescontoString = inicio.get(Calendar.DAY_OF_MONTH) + "-" + inicio.get(Calendar.MONTH) + "-" + inicio.get(Calendar.YEAR) + " " + "18:00:00";
+		String inicioPeriodoMeiaNoiteString = inicio.get(Calendar.DAY_OF_MONTH) + "-" + inicio.get(Calendar.MONTH) + "-" + inicio.get(Calendar.YEAR) + " " + "23:59:59";
 		Calendar fim = Calendar.getInstance();
 		fim.setTime(dataFinal);
 		String fimPeriodoComDescontoString = fim.get(Calendar.DAY_OF_MONTH) + "-" + fim.get(Calendar.MONTH) + "-" + fim.get(Calendar.YEAR) + " " + "7:59:59";
 
 		Date inicioPeriodoComDesconto = null;
+		Date inicioPeriodoMeiaNoite = null;
 		Date fimPeriodoComDesconto = null;
 		
 		try {
 
 			inicioPeriodoComDesconto = formatter.parse(inicioPeriodoComDescontoString);
+			inicioPeriodoMeiaNoite = formatter.parse(inicioPeriodoMeiaNoiteString);
 			fimPeriodoComDesconto = formatter.parse(fimPeriodoComDescontoString);
 			System.out.println(inicioPeriodoComDesconto);
 			System.out.println(formatter.format(inicioPeriodoComDesconto));
+			
+			System.out.println(inicioPeriodoMeiaNoite);
+			System.out.println(formatter.format(inicioPeriodoMeiaNoite));
 			
 			System.out.println(fimPeriodoComDesconto);
 			System.out.println(formatter.format(fimPeriodoComDesconto));
@@ -98,21 +106,23 @@ public class WSTT {
 			System.out.println("Período(s) Inválido(s)");
 		}
 		
-		Calendar aux = Calendar.getInstance();
+		Calendar aux = inicio;
 		
-		while(inicio.before(fim)){
+		while(aux.before(fim)){
 			
-			if(inicio.get(Calendar.HOUR_OF_DAY) >= 8 && inicio.get(Calendar.HOUR_OF_DAY) < 18) {
-//				aux = atualizaCalendar(inicio.get(Calendar.DAY_OF_MONTH), inicio.get(Calendar.MONTH), 
-//						inicio.get(Calendar.YEAR), hora, min, seg);
-				duracaoChamadaNoPeriodoSemDesconto += dataFinal.getTime() - dataInicial.getTime();
-			} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 0 && inicio.get(Calendar.HOUR_OF_DAY) < 8) {
-				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
-			} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 18 && inicio.get(Calendar.HOUR_OF_DAY) < 24) {
-				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
-			} else if(inicio.get(Calendar.HOUR_OF_DAY) >= 18 && inicio.get(Calendar.HOUR_OF_DAY) < 8) {
-				duracaoChamadaNoPeriodoComDesconto += dataFinal.getTime() - dataInicial.getTime();
+			if(aux.get(Calendar.HOUR_OF_DAY) >= 8 && aux.get(Calendar.HOUR_OF_DAY) < 18) {
+				this.duracaoChamadaNoPeriodoSemDesconto += minutesBetween(aux.getTime(), inicioPeriodoComDesconto);
+				aux.setTime(inicioPeriodoComDesconto);		
+			} else if(aux.get(Calendar.HOUR_OF_DAY) >= 0 && aux.get(Calendar.HOUR_OF_DAY) < 8) {
+				this.duracaoChamadaNoPeriodoComDesconto += minutesBetween(aux.getTime(), fimPeriodoComDesconto);
+				aux.setTime(fimPeriodoComDesconto);	
+			} else if(aux.get(Calendar.HOUR_OF_DAY) >= 18 && aux.get(Calendar.HOUR_OF_DAY) < 24) {
+				this.duracaoChamadaNoPeriodoComDesconto += minutesBetween(aux.getTime(), inicioPeriodoMeiaNoite);
+				aux.setTime(inicioPeriodoMeiaNoite);
 			} 
+
+			
+			System.out.println("loop");
 		}
 		
 		
