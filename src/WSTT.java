@@ -121,7 +121,7 @@ public class WSTT {
 		
 		Float precoBrutoAux = precoBruto * (1 - porcentagemDesconto);
 		if(maisQueUmaHora == true){
-			precoBrutoAux = precoBrutoAux * (1 - 0.85F);
+			precoBrutoAux = precoBrutoAux * (1 - 0.15F);
 		}
 		return precoBrutoAux;
 	}
