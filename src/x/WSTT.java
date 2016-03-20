@@ -12,70 +12,25 @@ public class WSTT {
     public static final long HOUR_IN_MILLISECONDS = TimeUnit.HOURS.toMillis(1L);
     public static final long MINUTE_IN_MILLISECONDS = TimeUnit.MINUTES.toMillis(1L);
 
-	private String dataInicialString;
-	private String dataFinalString;
-	private Date dataInicial;
-	private Date dataFinal;
-	private boolean maisQueUmaHora;
-	public float duracaoChamadaNoPeriodoSemDesconto;
-	public float duracaoChamadaNoPeriodoComDesconto;
-	
 	public float calculaTarifa(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof) {
+		boolean datasValidas = verify(diai, mesi, anoi, horai, minutoi, segundoi, diaf, mesf, anof, horaf, minutof, segundof);
+		if (!datasValidas) { return -1; }
 		
-		float duracaoLigacao = calculaDuracaoLigacao(diai, mesi, anoi, horai, minutoi, segundoi, diaf, mesf, anof, horaf, minutof, segundof);
-		if (duracaoLigacao == -1F) { return -1; }
-		float precoBruto = calculaPrecoBruto(duracaoLigacao);
-		float porcentagemDesconto = calculaDescontos();
-		float tarifaFinal = aplicaDescontoNoPrecoBruto(precoBruto, porcentagemDesconto);
+		final Date dataInicial = converterParaData(diai, mesi, anoi, horai, minutoi, segundoi);
+		final Date dataFinal = converterParaData(diaf, mesf, anof, horaf, minutof, segundof);
+		if (dataInicial == null || dataFinal == null) { return -1; }
+		
+		long duracaoLigacao = calculaDuracaoLigacao(dataInicial, dataFinal);
+		float preco = calculaPreco(dataInicial, dataFinal);
+		float tarifaFinal = aplicaDescontoSuperior1Hora(preco, duracaoLigacao);
 		return tarifaFinal;
 	}
 	
-	private float calculaPrecoBruto(float duracaoLigacao) {
-		return (float) (duracaoLigacao * 0.4);
-	}
-	
-	public float calculaDuracaoLigacao(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof) {
+	private float calculaPreco(final Date dataInicial, final Date dataFinal) {
+		// TODO
+		// (float) (duracaoLigacao * 0.4)
 		
-		Float verifica = verify(diai, mesi, anoi, horai, minutoi, segundoi, diaf, mesf, anof, horaf, minutof, segundof);
-		if(verifica == -1F){
-			return verifica;
-		}
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
-		dataInicialString = diai + "-" + mesi + "-" + anoi + " " + horai + ":" + minutoi + ":" + segundoi;
-		dataFinalString = diaf + "-" + mesf + "-" + anof  + " " + horaf + ":" + minutof + ":" + segundof;
-
-		try {
-
-			dataInicial = formatter.parse(dataInicialString);
-			dataFinal = formatter.parse(dataFinalString);
-			System.out.println(dataInicial);
-			System.out.println(formatter.format(dataInicial));
-			
-			System.out.println(dataFinal);
-			System.out.println(formatter.format(dataFinal));
-			
-		} catch (ParseException e) {
-			System.out.println("Data(s) Inválida(s)");
-			return -1F;
-		}
-		
-		calculaDuracaoNosIntervalos();
-		
-		Long duracaoLigacao = minutesBetween(dataInicial,dataFinal); //retorna a diferença em minutos
-		
-		if(duracaoLigacao >= 60){
-			maisQueUmaHora = true;
-		}else{
-			maisQueUmaHora = false;
-		}
-		
-		return duracaoLigacao;
-	}
-	
-	public void calculaDuracaoNosIntervalos() {
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		/*SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		Calendar inicio = Calendar.getInstance();
         inicio.setTime(dataInicial);
 		String inicioPeriodoComDescontoString = inicio.get(Calendar.DAY_OF_MONTH) + "-" + inicio.get(Calendar.MONTH) + "-" + inicio.get(Calendar.YEAR) + " " + "18:00:00";
@@ -131,7 +86,29 @@ public class WSTT {
 		System.out.println(formatter.format(fimPeriodoComDesconto));
 		
 		//duracaoChamadaNoPeriodoSemDesconto = dataFinal.getTime() - fimPeriodoComDesconto.getTime();
+		*/
 		
+		return -1;
+	}
+	
+	public Date converterParaData(int dia,int mes, int ano, int hora, int minuto, int segundo) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
+		String dataString = dia + "-" + mes + "-" + ano + " " + hora + ":" + minuto + ":" + segundo;
+
+		try {
+			Date data = formatter.parse(dataString);
+			System.out.println(data);
+			System.out.println(formatter.format(data));
+			return data;
+		} catch (ParseException e) {
+			System.out.println("Data(s) Inválida(s)");
+			return null;
+		}
+	}
+	
+	public long calculaDuracaoLigacao(final Date dataInicial, final Date dataFinal) {
+		long milliseconds = Math.abs(dataFinal.getTime() - dataInicial.getTime());
+        return milliseconds / MINUTE_IN_MILLISECONDS;
 	}
 	
 	public Calendar atualizaCalendar(int dia, int mes, int ano, int hora, int min, int seg){
@@ -145,20 +122,10 @@ public class WSTT {
         c.set(Calendar.SECOND, seg);
         return c;
 	}
-	
-	public float calculaDescontos() {
-		
-		
-		return 0; 
-	}
 
-	public float aplicaDescontoNoPrecoBruto(float precoBruto, float porcentagemDesconto) {
-		
-		Float precoBrutoAux = precoBruto * (1 - porcentagemDesconto);
-		if(maisQueUmaHora == true){
-			precoBrutoAux = precoBrutoAux * (1 - 0.15F);
-		}
-		return precoBrutoAux;
+	public float aplicaDescontoSuperior1Hora(float precoBruto, long duracaoLigacao) {
+		boolean maisQueUmaHora = duracaoLigacao >= 60 ? true:false;
+		return maisQueUmaHora ? precoBruto * (1 - 0.15F) : precoBruto;
 	}
 	
 	//retorna a diferença em horas
@@ -167,36 +134,30 @@ public class WSTT {
         return milliseconds / HOUR_IN_MILLISECONDS;
     }
     
-    //retorna a diferença em minutos
-    public static long minutesBetween(Date dateFrom, Date dateTo) {
-        long milliseconds = Math.abs(dateTo.getTime() - dateFrom.getTime());
-        return milliseconds / MINUTE_IN_MILLISECONDS;
-    }
-    
-    public Float verify(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof){
+    public boolean verify(int diai, int mesi, int anoi, int horai, int minutoi, int segundoi, int diaf, int mesf, int anof, int horaf, int minutof, int segundof){
     	  	
     	if(diai >= 31 || diai <= 0 || diaf >=31 || diaf <=0){
-    		return -1F;
+    		return false;
     	}
     	
     	if(mesi >= 12 || mesi <= 0 || mesf >=12 || mesf <=0){
-    		return -1F;
+    		return false;
     	}
     	
     	if(anoi <= 0 || anof <= 0){
-    		return -1F;
+    		return false;
     	}
     	
     	if(horai >= 24 || horai < 0 || horaf >=24 || horaf <0){
-    		return -1F;
+    		return false;
     	}
     	
     	if(minutoi > 59 || minutoi < 0 || minutof >59 || minutof <0){
-    		return -1F;
+    		return false;
     	}
     	
     	if(segundoi > 59 || segundoi < 0 || segundof >59 || segundof <0){
-    		return -1F;
+    		return false;
     	}
     	
     	boolean inicialBissexto = bissexto(anoi);
@@ -204,17 +165,17 @@ public class WSTT {
     	
     	if (!inicialBissexto) {
     		if (mesi==2 && diai>28) {
-    			return -1F;
+    			return false;
     		}
     	}
     	
     	if (!finalBissexto) {
     		if (mesf==2 && diaf>28) {
-    			return -1F;
+    			return false;
     		}
     	}
     	
-    	return 0F;
+    	return true;
     }
     
     public boolean bissexto(int ano) {
